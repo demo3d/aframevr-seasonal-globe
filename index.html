@@ -3,32 +3,72 @@
   <head>
     <meta charset="utf-8">
     <title>A-Frame Seasonal Globe</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nunjucks/2.3.0/nunjucks.min.js"></script>
     <script src="build.js"></script>
   </head>
   <body>
     <a-scene>
-    <!--
-      <a-entity calendar-heatmap="json: data/github_stargazers_per_day.json"
-                animation="startEvents: calendar-heatmap-generated; dur: 2000;
-                           easing: easeInOutElastic; property: rotation; to: 30 0 0"
-                animation__hover="easing: easeInOutQuad; property: position; dir: alternate;
-                                  dur: 2000; loop: true; to: -2 1.7 -2"
-                position="-2 1.8 -2">
+
+      <a-assets>
+        <script id="month" type="text/nunjucks">
+          <a-entity class="month"
+            bmfont-text="text: {{name}}; color: #fff"
+
+            event-set__1="_event: mousedown; scale: 1 1 1"
+            event-set__2="_event: mouseup; scale: 1.2 1.2 1"
+            event-set__3="_event: mouseenter; scale: 1.2 1.2 1"
+            event-set__4="_event: mouseleave; scale: 1 1 1"
+            set-attribute="on: click; target: #dynamic-globe; attribute: {{attr}}; value: {{value}}"
+            >
+          </a-entity>
+        </script>
+      </a-assets>
+
+<!--
+      <a-entity id="progress-radial"
+        progress="type: bar-2d; values: 0.1 0.5 0.1; width: 1.3;
+          thickness: 2.1; lit: true"
+        position="0.75 0 0">
       </a-entity>
     -->
 
-      <a-entity dynamic-globe="texturesPath: temperature; transitionDur: 3000" 
-        position="0 1.8 -2">
+
+      <a-entity id="dynamic-globe"
+        dynamic-globe="texturesPath: marble; transitionDur: 3000;
+        radius: 10; autoMode: false; monthIndex: 6;"
+        position="0 0 0">
+
+        <a-entity layout="type: line; margin: 0.5"
+          position="0 -1 -3">
+          <a-entity template="src: #month" data-name="Play" data-attr="autoMode" data-value="true"></a-entity>
+          <a-entity template="src: #month" data-name="Stop" data-attr="autoMode" data-value="false"></a-entity>
+        </a-entity>
+
+        <a-entity layout="type: line; column: 3; margin: 0.4"
+          position="-2.5 0 -3">
+          <a-entity template="src: #month" data-name="Jan" data-attr="monthIndex" data-value="1"></a-entity>
+          <a-entity template="src: #month" data-name="Feb" data-attr="monthIndex" data-value="2"></a-entity>
+          <a-entity template="src: #month" data-name="Mar" data-attr="monthIndex" data-value="3"></a-entity>
+          <a-entity template="src: #month" data-name="Apr" data-attr="monthIndex" data-value="4"></a-entity>
+          <a-entity template="src: #month" data-name="Mai" data-attr="monthIndex" data-value="5"></a-entity>
+          <a-entity template="src: #month" data-name="Jun" data-attr="monthIndex" data-value="6"></a-entity>
+          <a-entity template="src: #month" data-name="Jul" data-attr="monthIndex" data-value="7"></a-entity>
+          <a-entity template="src: #month" data-name="Aug" data-attr="monthIndex" data-value="8"></a-entity>
+          <a-entity template="src: #month" data-name="Sep" data-attr="monthIndex" data-value="9"></a-entity>
+          <a-entity template="src: #month" data-name="Okt" data-attr="monthIndex" data-value="10"></a-entity>
+          <a-entity template="src: #month" data-name="Nov" data-attr="monthIndex" data-value="11"></a-entity>
+          <a-entity template="src: #month" data-name="Dez" data-attr="monthIndex" data-value="12"></a-entity>
+        </a-entity>
       </a-entity>
 
-      <a-sky color="#394359"></a-sky>
-      <a-circle rotation="-90 0 0" color="#303242" radius="50" shader="flat"></a-circle>
-
-      <a-light position="-1 1 1"></a-light>
-      <a-light position="-1 -1 1" intensity="0.75"></a-light>
-      <a-light type="ambient" color="#999"></a-light>
-
-      <a-entity camera="userHeight: 1.8" look-controls wasd-controls></a-entity>
+      <a-entity camera look-controls wasd-controls>
+        <a-cursor id="cursor"
+          fuse="true"
+          material="color: white; shader: flat"
+          animation__click="property: scale; startEvents: click; from: 0.1 0.1 0.1; to: 1 1 1; dur: 450"
+          animation__fusing="property: fusing; startEvents: fusing; from: 1 1 1; to: 0.1 0.1 0.1; dur: 2500">
+        </a-cursor>
+      </a-entity>
     </a-scene>
   </body>
 </html>

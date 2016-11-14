@@ -4,7 +4,7 @@ AFRAME.registerComponent('dynamic-globe', {
   schema: {
     texturesPath: {default: 'marble'},
     months: {default: [...Array(12)].map((_,i) => i+1) },
-    activeMonth: {default: 1},
+    monthIndex: {default: 1},
     textureExtension: {default: 'jpg'},
     radius: {default: 1},
     autoMode: {default: true},
@@ -13,11 +13,11 @@ AFRAME.registerComponent('dynamic-globe', {
 
   init: function () {
     this.elapsed = 0
-    this.actualMonth = this.data.activeMonth - 1
+    this.actualMonth = this.data.monthIndex - 1
     this.loader = new THREE.TextureLoader()
   },
 
-  update: function () { 
+  update: function () {
     this.load()
   },
 
@@ -33,8 +33,8 @@ AFRAME.registerComponent('dynamic-globe', {
         this.loader
           .load(
             `data/${data.texturesPath}/${month}.${data.textureExtension}`,
-            texture => resolve(texture), 
-            xhr => {}, 
+            texture => resolve(texture),
+            xhr => {},
             err => reject(err)
             )
 
@@ -70,8 +70,8 @@ AFRAME.registerComponent('dynamic-globe', {
             uniforms: this.uniforms,
             vertexShader: VS,
             fragmentShader: FS,
-            //side: THREE.BackSide
-            side: THREE.DoubleSide
+            side: THREE.BackSide,
+            //side: THREE.DoubleSide
         });
 
 
@@ -102,11 +102,13 @@ AFRAME.registerComponent('dynamic-globe', {
 
     if (data.autoMode) {
       if (this.elapsed >= data.transitionDur) {
-        
+
         this.actualMonth = ( this.actualMonth + 1 ) % zn;
         this.elapsed = 0
         console.log("Change !")
       }
+    } else {
+      this.actualMonth = data.monthIndex
     }
 
 
@@ -140,7 +142,7 @@ uniform float ratio;
 
 varying vec3 vNormal;
 varying vec2 vUv;
-void main() 
+void main()
 {
 
   vec4 texelA = texture2D( diffuseSourceA, vUv );
