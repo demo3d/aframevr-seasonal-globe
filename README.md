@@ -1,6 +1,4 @@
-# aframevr-globe
-
-Seasonal changig globe
+Seasonal Globe
 
 Data from NEO Obersvations
 
